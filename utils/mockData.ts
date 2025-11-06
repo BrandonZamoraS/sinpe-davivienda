@@ -67,6 +67,50 @@ export const mockTransactions: Transaction[] = [
     description: 'Cobro por venta',
     reference: 'CHG-20251031-456',
   },
+    {
+    id: '6',
+    type: 'send',
+    amount: 25000,
+    date: new Date('2025-11-01T09:20:00'),
+    status: 'completed',
+    recipient: {
+      name: 'Ana López',
+      phoneNumber: '8888-5555',
+    },
+    description: 'Regalo cumpleaños',
+    reference: 'SINPE-20251101-123',
+  },
+  {
+    id: '7',
+    type: 'charge',
+    amount: 12500,
+    date: new Date('2025-10-31T18:00:00'),
+    status: 'completed',
+    description: 'Cobro por venta',
+    reference: 'CHG-20251031-456',
+  },
+    {
+    id: '8',
+    type: 'send',
+    amount: 25000,
+    date: new Date('2025-11-01T09:20:00'),
+    status: 'completed',
+    recipient: {
+      name: 'Ana López',
+      phoneNumber: '8888-5555',
+    },
+    description: 'Regalo cumpleaños',
+    reference: 'SINPE-20251101-123',
+  },
+  {
+    id: '9',
+    type: 'charge',
+    amount: 12500,
+    date: new Date('2025-10-31T18:00:00'),
+    status: 'completed',
+    description: 'Cobro por venta',
+    reference: 'CHG-20251031-456',
+  },
 ];
 
 export const mockContacts: Contact[] = [
