@@ -1,22 +1,44 @@
-import { View, StyleSheet, ScrollView } from 'react-native';
-import { Text } from 'react-native-paper';
-import { Colors } from '../../constants/Colors';
-import { Spacing } from '../../constants/Spacing';
 import React, { useState } from "react";
 import { View, StyleSheet, FlatList, Pressable } from "react-native";
 import { Text } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { Transaction, User } from "@/types";
 import { mockTransactions, mockUser } from "@/utils/mockData";
 
 export default function HistoryScreen() {
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [filterType, setFilterType] = useState<"credit" | "debit" | null>(null);
+  const [filterDate, setFilterDate] = useState<Date | null>(null);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const user: User = mockUser;
 
   const toggleExpand = (id: string) => {
     setExpanded(expanded === id ? null : id);
   };
+
+  const filteredTransactions = mockTransactions.filter((item) => {
+    const matchesType =
+      !filterType ||
+      (filterType === "credit" && item.type === "receive") ||
+      (filterType === "debit" && item.type === "send");
+    const matchesDate =
+      !filterDate ||
+      item.date.toLocaleDateString() === filterDate.toLocaleDateString();
+    return matchesType && matchesDate;
+  });
+
+  const handleDateChange = (event: any, selectedDate?: Date) => {
+    setShowDatePicker(false);
+    if (selectedDate) setFilterDate(selectedDate);
+  };
+
+  const clearFilters = () => {
+    setFilterType(null);
+    setFilterDate(null);
+  };
+
   return (
     <View style={styles.screen}>
       {/* Header */}
@@ -25,6 +47,77 @@ export default function HistoryScreen() {
         <Text style={styles.headerSubtitle}>
           {user.phoneNumber} - {user.name}
         </Text>
+      </View>
+
+      <View style={styles.filtersRow}>
+        {showDatePicker && (
+          <DateTimePicker
+            value={filterDate || new Date()}
+            mode="date"
+            display="calendar"
+            onChange={handleDateChange}
+          />
+        )}
+        <View style={styles.filterButtons}>
+          <Pressable
+            style={[
+              styles.typeButton,
+              filterType === "credit" && styles.activeButton,
+            ]}
+            onPress={() => setFilterType("credit")}
+          >
+            <Icon
+              name="arrow-downward"
+              size={16}
+              color={filterType === "credit" ? "#fff" : "#dd141d"}
+            />
+            <Text
+              style={[
+                styles.typeText,
+                filterType === "credit" && styles.activeText,
+              ]}
+            >
+              Créditos
+            </Text>
+          </Pressable>
+
+          <Pressable
+            style={[
+              styles.typeButton,
+              filterType === "debit" && styles.activeButton,
+            ]}
+            onPress={() => setFilterType("debit")}
+          >
+            <Icon
+              name="arrow-upward"
+              size={16}
+              color={filterType === "debit" ? "#fff" : "#dd141d"}
+            />
+            <Text
+              style={[
+                styles.typeText,
+                filterType === "debit" && styles.activeText,
+              ]}
+            >
+              Débitos
+            </Text>
+          </Pressable>
+        </View>
+
+        {/* Fecha expandible */}
+        <Pressable
+          style={[styles.dateButton, { flex: 1, marginHorizontal: 6 }]}
+          onPress={() => setShowDatePicker(true)}
+        >
+          <Icon name="calendar-today" size={18} color="#dd141d" />
+          <Text style={styles.dateText}>
+            {filterDate ? filterDate.toLocaleDateString() : "Fecha"}
+          </Text>
+        </Pressable>
+
+        <Pressable style={styles.clearButton} onPress={clearFilters}>
+          <Icon name="close" size={18} color="#fff" />
+        </Pressable>
       </View>
 
       {/* Lista */}
@@ -119,6 +212,52 @@ const styles = StyleSheet.create({
   headerTitle: { fontSize: 17, fontWeight: "bold", color: "#000" },
   headerSubtitle: { marginTop: 3, color: "#444", fontSize: 13 },
 
+  filtersRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    backgroundColor: "#fff",
+    borderBottomWidth: 1,
+    borderColor: "#ddd",
+  },
+  filterButtons: {
+    flexDirection: "row",
+    gap: 6,
+  },
+  typeButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#dd141d",
+    borderRadius: 6,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+  },
+
+  typeText: {
+    marginLeft: 4,
+    color: "#dd141d",
+    fontSize: 12,
+    fontWeight: "600",
+  },
+  activeButton: { backgroundColor: "#dd141d" },
+  activeText: { color: "#fff" },
+  dateButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 6,
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+  },
+  dateText: { marginLeft: 4, fontSize: 12, color: "#000" },
+  clearButton: {
+    backgroundColor: "#777",
+    padding: 6,
+    borderRadius: 6,
+  },
 
   container: { padding: 14 },
   cardContainer: {
