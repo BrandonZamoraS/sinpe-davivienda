@@ -197,18 +197,34 @@
   - Lista de cobros activos
   - Lista de cobros expirados/pagados
 
-### 4.5 Pantalla 4: Historial
-- [ ] **app/(tabs)/history.tsx** - Historial de transacciones
-  - Lista de todas las transacciones
-  - Filtros:
-    - Por tipo (enviadas, recibidas, cobros, recargas)
-    - Por fecha (hoy, semana, mes, custom)
-    - Por estado
-  - Búsqueda por nombre o monto
-  - Pull to refresh
-  - Paginación infinita
-  - Tap en transacción → Modal con detalles
-  - Botón descargar comprobante (PDF)
+### 4.5 Pantalla 4: Historial ✅ (Parcial)
+- [x] **app/(tabs)/history.tsx** - Historial de transacciones (Refactorizado 2025-11-06)
+  - [x] Lista de todas las transacciones con FlatList
+  - [x] Filtros:
+    - [x] Por tipo (Créditos/Débitos)
+    - [x] Por fecha (con DatePicker)
+    - [ ] Por estado (pendiente)
+  - [ ] Búsqueda por nombre o monto
+  - [ ] Pull to refresh
+  - [ ] Paginación infinita
+  - [x] Tap en transacción → Expandir detalles
+  - [x] Botón descargar comprobante (placeholder)
+  
+  **Componentes extraídos:**
+  - [x] `/components/history/TransactionCard.tsx`
+  - [x] `/components/history/FilterBar.tsx`
+  - [x] `/components/history/HistoryHeader.tsx`
+  
+  **Documentación:**
+  - [x] ADR 003: Componentes de filtrado
+  - [x] REFACTORIZACION_HISTORIAL.md
+  
+  **Pendiente:**
+  - [ ] Loading states (skeleton screens)
+  - [ ] Pull to refresh
+  - [ ] Implementación real de descarga PDF
+  - [ ] Búsqueda avanzada
+  - [ ] Paginación infinita
 
 ### 4.6 Pantalla 5: Servicios
 - [ ] **app/(tabs)/services.tsx** - Recargas telefónicas
