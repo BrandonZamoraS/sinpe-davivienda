@@ -1,37 +1,64 @@
-import { View, StyleSheet, ScrollView } from 'react-native';
+import React, { useState, useCallback } from 'react';
+import { View, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import { Text } from 'react-native-paper';
-import { Colors } from '../../constants/Colors';
-import { Spacing } from '../../constants/Spacing';
+import { mockUser, mockTransactions } from '@/utils/mockData';
+import { BalanceCard, MonthSummary, RecentTransactions } from '@/components/home';
+import { Colors } from '@/constants/Colors';
+import { Spacing } from '@/constants/Spacing';
+import { Typography } from '@/constants/Typography';
 
 export default function HomeScreen() {
+  const [refreshing, setRefreshing] = useState(false);
+
+  // Calcular estadísticas del mes
+  const currentMonth = new Date().getMonth();
+  const monthTransactions = mockTransactions.filter(
+    (t) => t.date.getMonth() === currentMonth
+  );
+
+  const monthIncome = monthTransactions
+    .filter((t) => t.type === 'receive')
+    .reduce((sum, t) => sum + t.amount, 0);
+
+  const monthExpenses = monthTransactions
+    .filter((t) => t.type === 'send' || t.type === 'recharge')
+    .reduce((sum, t) => sum + t.amount, 0);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    // Simular carga de datos
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1500);
+  }, []);
+
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
-        <Text variant="headlineLarge" style={styles.title}>
-          🏠 Inicio
-        </Text>
-        <Text variant="bodyLarge" style={styles.subtitle}>
-          Pantalla principal de SINPE Davivienda
-        </Text>
-        
-        <View style={styles.infoBox}>
-          <Text variant="titleMedium" style={styles.infoTitle}>
-            Esta pantalla mostrará:
-          </Text>
-          <Text variant="bodyMedium" style={styles.infoText}>
-            • Saldo actual de la cuenta
-          </Text>
-          <Text variant="bodyMedium" style={styles.infoText}>
-            • Accesos rápidos (Enviar, Cobrar, Recargar)
-          </Text>
-          <Text variant="bodyMedium" style={styles.infoText}>
-            • Últimas 5 transacciones
-          </Text>
-          <Text variant="bodyMedium" style={styles.infoText}>
-            • Pull to refresh
-          </Text>
-        </View>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.content}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          tintColor={Colors.primary.red}
+          colors={[Colors.primary.red]}
+        />
+      }
+    >
+      {/* Saludo personalizado */}
+      <View style={styles.greetingSection}>
+        <Text style={styles.greeting}>¡Hola, {mockUser.name.split(' ')[0]}! 👋</Text>
+        <Text style={styles.subgreeting}>Bienvenido a tu SINPE</Text>
       </View>
+
+      {/* Card de saldo con gradiente */}
+      <BalanceCard balance={mockUser.balance} accountNumber={mockUser.accountNumber} />
+
+      {/* Resumen del mes */}
+      <MonthSummary income={monthIncome} expenses={monthExpenses} />
+
+      {/* Últimas transacciones - scroll horizontal */}
+      <RecentTransactions transactions={mockTransactions} />
     </ScrollView>
   );
 }
@@ -39,35 +66,24 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background.primary,
+    backgroundColor: Colors.background.secondary,
   },
   content: {
     padding: Spacing.lg,
+    paddingBottom: Spacing['2xl'],
   },
-  title: {
-    color: Colors.primary.red,
-    fontWeight: 'bold',
-    marginBottom: Spacing.sm,
+  greetingSection: {
+    marginBottom: Spacing.lg,
   },
-  subtitle: {
-    color: Colors.text.secondary,
-    marginBottom: Spacing.xl,
-  },
-  infoBox: {
-    backgroundColor: Colors.background.secondary,
-    padding: Spacing.md,
-    borderRadius: 12,
-    borderLeftWidth: 4,
-    borderLeftColor: Colors.primary.red,
-  },
-  infoTitle: {
+  greeting: {
+    fontSize: Typography.sizes['2xl'],
+    fontWeight: Typography.weights.bold,
     color: Colors.text.primary,
-    fontWeight: 'bold',
-    marginBottom: Spacing.md,
-  },
-  infoText: {
-    color: Colors.text.secondary,
     marginBottom: Spacing.xs,
+  },
+  subgreeting: {
+    fontSize: Typography.sizes.base,
+    color: Colors.text.secondary,
   },
 });
 

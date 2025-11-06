@@ -168,13 +168,34 @@
   - Ayuda
   - Cerrar sesión
 
-### 4.2 Pantalla 1: Home/Dashboard
-- [ ] **app/(tabs)/index.tsx** - Pantalla principal
-  - BalanceCard con saldo actual
-  - Accesos rápidos (Enviar, Cobrar, Recargar)
-  - Últimas 5 transacciones
-  - Pull to refresh
-  - Animación de entrada
+### 4.2 Pantalla 1: Home/Dashboard ✅ (Completado)
+- [x] **app/(tabs)/index.tsx** - Pantalla principal (Diseño moderno 2025-11-06)
+  - [x] BalanceCard con saldo actual (con gradiente rojo-naranja)
+  - [x] Toggle para ocultar/mostrar saldo (privacidad)
+  - [x] Accesos rápidos en grid 2x2 (Enviar, Historial, Cobrar, Recargar)
+  - [x] Resumen del mes (ingresos, gastos, ahorro %)
+  - [x] Últimas 5 transacciones en scroll horizontal
+  - [x] Pull to refresh funcional
+  - [ ] Animaciones de entrada (pendiente)
+  
+  **Componentes creados:**
+  - [x] `/components/home/BalanceCard.tsx` - Card de saldo con gradiente
+  - [x] `/components/home/QuickActions.tsx` - Grid de accesos rápidos
+  - [x] `/components/home/MonthSummary.tsx` - Estadísticas del mes
+  - [x] `/components/home/RecentTransactions.tsx` - Scroll horizontal
+  
+  **Documentación:**
+  - [x] `docs/DISEÑO_HOME.md` - Filosofía y decisiones de diseño
+  
+  **Características:**
+  - ✅ Diseño moderno para jóvenes ~25 años
+  - ✅ Minimalista pero no aburrido
+  - ✅ Profesional y confiable
+  - ✅ 100% uso de constantes (Colors, Spacing, Typography)
+  - ✅ Type-safe con TypeScript
+  - ✅ Navegación integrada
+  - ✅ Pull-to-refresh
+  - ✅ Estadísticas calculadas en tiempo real
 
 ### 4.3 Pantalla 2: Transferir
 - [ ] **app/(tabs)/transfer.tsx** - Realizar transferencias
